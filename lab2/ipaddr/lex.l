@@ -4,8 +4,9 @@
 %}
 %option noyywrap
 
-v4 "WRITE YOUR REGULAR EXPRESSIONS HERE"
-v6 "ADD ANY SUB-PATTERNS AS YOU WANT"
+
+v4 ^((0|1[0-9]{0,2}|2[0-4][0-9]{0,1}|25[0-5]{0,1}|2[6-9]|[0-9])\.){3}(0|1[0-9]{0,2}|2[0-4][0-9]{0,1}|25[0-5]{0,1}|2[6-9]|[0-9])$
+v6 ^([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{1,4})$
 
 %%
 {v4} { indicator = 4; }
@@ -29,4 +30,23 @@ char *validIPAddress(char *IP){
     yylex();
     yy_delete_buffer(buf);
     return addr_type;
+}
+
+int main(int argc, char **argv){
+    char *ip;
+    if(argc < 2){
+        fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
+        return -1;
+    }
+    else if(argc == 2){
+        ip = argv[1];
+        char * type=validIPAddress(ip);
+        printf("type=%s",type);
+    }
+    else{
+        fputs("Too much arguments!\n", stderr);
+        return -1;
+    }
+
+    return 0;
 }
